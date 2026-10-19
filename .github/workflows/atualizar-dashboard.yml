@@ -1,0 +1,63 @@
+# Atualiza o Dashboard de Indicadores JP todo dia às 02:00 (Brasília) e publica no GitHub Pages.
+# Caminho no repositório: .github/workflows/atualizar-dashboard.yml
+name: Atualizar dashboard
+
+on:
+  schedule:
+    - cron: '0 5 * * *'      # 05:00 UTC = 02:00 em Brasília (o GitHub pode atrasar alguns minutos)
+  workflow_dispatch:          # botão "Run workflow" para rodar na hora
+
+permissions:
+  contents: write             # grava ultima-atualizacao.txt (mantém o agendamento ativo)
+  pages: write
+  id-token: write
+
+concurrency:
+  group: dashboard
+  cancel-in-progress: false
+
+jobs:
+  gerar:
+    runs-on: ubuntu-latest
+    timeout-minutes: 120
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
+      - name: Instalar dependência de criptografia
+        run: pip install cryptography==43.0.3
+
+      - name: Buscar dados no Acessórias e gerar o painel
+        env:
+          ACESSORIAS_TOKEN: ${{ secrets.ACESSORIAS_TOKEN }}
+          PAINEL_SENHA: ${{ secrets.PAINEL_SENHA }}
+        run: |
+          mkdir -p site
+          python jp_dashboard.py --out site/index.html
+          touch site/.nojekyll
+
+      - name: Registrar data da atualização
+        run: |
+          TZ=America/Sao_Paulo date '+%d/%m/%Y %H:%M' > ultima-atualizacao.txt
+          git config user.name  "jp-dashboard-bot"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add ultima-atualizacao.txt
+          git commit -m "Dashboard atualizado em $(cat ultima-atualizacao.txt)" || echo "sem mudanças"
+          git push
+
+      - uses: actions/upload-pages-artifact@v3
+        with:
+          path: site
+
+  publicar:
+    needs: gerar
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - id: deployment
+        uses: actions/deploy-pages@v4

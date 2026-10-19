@@ -1,0 +1,12 @@
+# Gerados localmente: nunca vão para o GitHub (contêm dados de clientes)
+index.html
+Dashboard_*.html
+site/
+*.json
+*.xlsx
+*.xls
+*.csv
+__pycache__/
+# Segredos locais
+.env
+*.token
