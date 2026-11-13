@@ -1,6 +1,6 @@
 # Dashboard de Indicadores JP Contábil — atualização automática
 
-Todo dia às 02:00 (Brasília) o GitHub busca os dados na API do Acessórias, gera o painel e publica no GitHub Pages.
+Toda madrugada (agendado para 00:17 de Brasília; o GitHub pode atrasar algumas horas) o GitHub busca os dados na API do Acessórias, gera o painel e publica no GitHub Pages.
 Não há banco de dados nem servidor: os dados ficam dentro do próprio HTML, criptografados com a senha do painel.
 
 - **Janela de dados:** mês atual + 2 meses anteriores (entregas pelo prazo, solicitações pela abertura, processos iniciados ou com conclusão/previsão no período).
@@ -28,7 +28,7 @@ Não há banco de dados nem servidor: os dados ficam dentro do próprio HTML, cr
 5. **Rode a primeira vez.** Em **Actions → Atualizar dashboard → Run workflow**. Acompanhe até ficar verde (cerca de 10 a 20 minutos).
 6. **Abra o painel.** O endereço aparece em **Settings → Pages** e no resultado da execução, no formato `https://SEU-USUARIO.github.io/indicadores-jp/`. Digite a senha. O painel lembra a senha até fechar a aba.
 
-A partir daí ele se atualiza sozinho todo dia às 02:00.
+A partir daí ele se atualiza sozinho toda madrugada.
 
 ## Manutenção
 

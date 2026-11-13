@@ -1,10 +1,11 @@
-# Atualiza o Dashboard de Indicadores JP todo dia às 02:00 (Brasília) e publica no GitHub Pages.
+# Atualiza o Dashboard de Indicadores JP toda madrugada e publica no GitHub Pages.
 # Caminho no repositório: .github/workflows/atualizar-dashboard.yml
 name: Atualizar dashboard
 
 on:
   schedule:
-    - cron: '0 5 * * *'      # 05:00 UTC = 02:00 em Brasília (o GitHub pode atrasar alguns minutos)
+    - cron: '17 3 * * *'     # 03:17 UTC = 00:17 em Brasília. Minuto quebrado de propósito: o GitHub atrasa
+                              # bastante os agendamentos em hora cheia (com '0 5' rodava só entre 9h e 10h).
   workflow_dispatch:          # botão "Run workflow" para rodar na hora
 
 permissions:
